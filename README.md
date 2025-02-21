@@ -169,7 +169,7 @@ php artisan migrate --force
 
 ## **Acceso y Usuarios**
 ### **Usuarios Iniciales (Seeder)**
-- **Admin:** admin@example.com / contraseña: `password`
-- **Usuario estándar:** user@example.com / contraseña: `password`
+- **Admin:** admin@sgr.test / contraseña: `password`
+- **Usuario estándar:** user@sgr.test / contraseña: `password`
 
 ---
