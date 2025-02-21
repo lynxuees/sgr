@@ -5,9 +5,10 @@
 @section('page-title', 'Administración de SGR')
 
 @section('content')
-    <div class="bg-white p-6 shadow rounded-lg">
-        <h2 class="text-2xl font-semibold">Bienvenido al Panel de Administración de SGR</h2>
-        <p class="mt-4 text-gray-600">Monitorea la recolección de residuos, gestión de usuarios y procesos de reciclaje.</p>
+    <!-- Dashboard container -->
+    <div class="bg-darkBackground p-6 shadow rounded-lg">
+        <h2 class="text-2xl font-semibold text-darkText">Bienvenido al Panel de Administración de SGR</h2>
+        <p class="mt-4 text-darkSecondary">Monitorea la recolección de residuos, gestión de usuarios y procesos de reciclaje.</p>
 
         <!-- Quick stats -->
         <div class="grid grid-cols-4 gap-6 mt-6">
@@ -35,14 +36,15 @@
             </div>
         </div>
 
-        <!-- Recent Activities -->
-        <div class="mt-8 bg-gray-50 p-4 rounded-lg shadow">
-            <h3 class="text-xl font-semibold">Últimas Recolecciones</h3>
+        <!-- Recent activities -->
+        <div class="mt-8 bg-darkSurface p-4 rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-darkText">Últimas Recolecciones</h3>
             <ul class="mt-4 space-y-2">
                 @foreach (\App\Models\Collection::latest()->limit(5)->get() as $collection)
-                    <li class="p-2 bg-white shadow rounded-md">
-                        <strong>{{ $collection->waste->description }}</strong> - Recolectado por {{ $collection->collector->name }}
-                        <span class="text-sm text-gray-500">
+                    <li class="p-2 bg-darkBackground shadow rounded-md">
+                        <strong class="text-darkText">{{ $collection->waste->description }}</strong>
+                        - Recolectado por <span class="text-darkPrimary">{{ $collection->collector->name }}</span>
+                        <span class="text-sm text-darkSecondary">
                             ({{ $collection->created_at->diffForHumans() }})
                         </span>
                     </li>
