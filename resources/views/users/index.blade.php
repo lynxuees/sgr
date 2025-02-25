@@ -41,7 +41,8 @@
                     </td>
                     <td class="px-3 py-2 flex justify-center gap-2">
                         @if ($user->deleted_at)
-                            <a href="{{ route('users.restore', $user->id) }}" class="text-darkPrimary" title="Restaurar">
+                            <a href="{{ route('users.restore', $user->id) }}" class="text-darkPrimary"
+                               title="Restaurar">
                                 <i data-lucide="rotate-cw" class="icon-small"></i>
                             </a>
                             <form action="{{ route('users.forceDelete', $user->id) }}" method="POST">
@@ -70,9 +71,9 @@
             @endforeach
             </tbody>
         </table>
+
     </div>
 
-    <!-- Modal de Crear/Editar Usuario -->
     <div id="userModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-darkSurface p-6 rounded-lg shadow-lg w-1/3">
             <h2 id="modalTitle" class="text-xl font-semibold text-darkText"></h2>
@@ -81,13 +82,16 @@
                 <input type="hidden" name="_method" id="formMethod">
 
                 <label class="block text-darkText">Nombre <span class="text-red-500">*</span>:</label>
-                <input type="text" name="name" id="name" class="w-full p-2 rounded bg-darkBackground text-darkText border" required>
+                <input type="text" name="name" id="name"
+                       class="w-full p-2 rounded bg-darkBackground text-darkText border" required>
 
                 <label class="block text-darkText mt-4">Email <span class="text-red-500">*</span>:</label>
-                <input type="email" name="email" id="email" class="w-full p-2 rounded bg-darkBackground text-darkText border" required>
+                <input type="email" name="email" id="email"
+                       class="w-full p-2 rounded bg-darkBackground text-darkText border" required>
 
                 <label class="block text-darkText mt-4">Rol <span class="text-red-500">*</span>:</label>
-                <select name="role_id" id="role" class="w-full p-2 rounded bg-darkBackground text-darkText border" required>
+                <select name="role_id" id="role" class="w-full p-2 rounded bg-darkBackground text-darkText border"
+                        required>
                     @foreach ($roles as $role)
                         <option value="{{ $role->id }}">{{ $role->name }}</option>
                     @endforeach
@@ -100,13 +104,16 @@
 
                 <div id="passwordSection">
                     <label class="block text-darkText mt-4">Contraseña <span class="text-red-500">*</span>:</label>
-                    <input type="password" name="password" id="password" class="w-full p-2 rounded bg-darkBackground text-darkText border">
+                    <input type="password" name="password" id="password"
+                           class="w-full p-2 rounded bg-darkBackground text-darkText border">
                     <label class="block text-darkText mt-4">Confirmar Contraseña:</label>
-                    <input type="password" name="password_confirmation" id="password_confirmation" class="w-full p-2 rounded bg-darkBackground text-darkText border">
+                    <input type="password" name="password_confirmation" id="password_confirmation"
+                           class="w-full p-2 rounded bg-darkBackground text-darkText border">
                 </div>
 
                 <div class="mt-4 flex justify-end gap-2">
-                    <button type="button" id="closeModal" class="bg-gray-600 text-white px-4 py-2 rounded-md">Cancelar</button>
+                    <button type="button" id="closeModal" class="bg-gray-600 text-white px-4 py-2 rounded-md">Cancelar
+                    </button>
                     <button type="submit" class="bg-darkPrimary text-white px-4 py-2 rounded-md">Guardar</button>
                 </div>
             </form>
@@ -161,18 +168,42 @@
 
             $("#userForm").validate({
                 rules: {
-                    name: { required: true, minlength: 3 },
-                    email: { required: true, email: true },
+                    name: {
+                        required: true,
+                        minlength: 3
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
                     password: {
                         required: function () {
                             return $("#modalTitle").text() === "Crear Usuario";
                         },
                         minlength: 8
                     },
-                    password_confirmation: { equalTo: "#password" }
+                    password_confirmation: {
+                        equalTo: "#password"
+                    }
+                },
+                messages: {
+                    name: {
+                        required: "El nombre es obligatorio.",
+                        minlength: "El nombre debe tener al menos 3 caracteres."
+                    },
+                    email: {
+                        required: "El correo electrónico es obligatorio.",
+                        email: "Debe ingresar un correo electrónico válido."
+                    },
+                    password: {
+                        required: "La contraseña es obligatoria.",
+                        minlength: "La contraseña debe tener al menos 8 caracteres."
+                    },
+                    password_confirmation: {
+                        equalTo: "Las contraseñas no coinciden."
+                    }
                 }
             });
         });
     </script>
-
 @endsection
