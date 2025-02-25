@@ -25,5 +25,11 @@ class DatabaseSeeder extends Seeder
         }
 
         User::factory(20)->create();
+
+        $this->call([
+            WasteTypesSeeder::class,
+            WastesSeeder::class,
+        ]);
+
     }
 }

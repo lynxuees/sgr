@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('status', ['Pendiente', 'Recolectado', 'Procesado', 'Eliminado']);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->softDeletes();
         });
     }
 
