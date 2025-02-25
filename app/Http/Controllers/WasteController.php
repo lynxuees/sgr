@@ -2,63 +2,72 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Waste;
+use App\Models\User;
+use App\Models\WasteType;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class WasteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        //
+        $wastes = Waste::withTrashed()->with(['user', 'type'])->get();
+        $users = User::all();
+        $wasteTypes = WasteType::all();
+        return view('wastes.index', compact('wastes', 'users', 'wasteTypes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'user_id'     => 'required|exists:users,id',
+            'type_id'     => 'required|exists:waste_types,id',
+            'description' => 'required|string|min:3',
+            'quantity'    => 'required|integer|min:1',
+            'status'      => 'required|in:Pendiente,Recolectado,Procesado,Eliminado',
+        ]);
+
+        Waste::create($validated);
+
+        return Redirect::route('wastes.index')->with('success', 'Residuo creado correctamente.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function update(Request $request, Waste $waste): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'user_id'     => 'required|exists:users,id',
+            'type_id'     => 'required|exists:waste_types,id',
+            'description' => 'required|string|min:3',
+            'quantity'    => 'required|integer|min:1',
+            'status'      => 'required|in:Pendiente,Recolectado,Procesado,Eliminado',
+        ]);
+
+        $waste->update($validated);
+
+        return Redirect::route('wastes.index')->with('success', 'Residuo actualizado correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function destroy(Waste $waste): RedirectResponse
     {
-        //
+        $waste->delete();
+        return Redirect::route('wastes.index')->with('success', 'Residuo deshabilitado correctamente.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function restore($waste): RedirectResponse
     {
-        //
+        $waste = Waste::withTrashed()->findOrFail($waste);
+        $waste->restore();
+        return Redirect::route('wastes.index')->with('success', 'Residuo restaurado correctamente.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function forceDelete($waste): RedirectResponse
     {
-        //
+        $waste = Waste::withTrashed()->findOrFail($waste);
+        $waste->forceDelete();
+        return Redirect::route('wastes.index')->with('success', 'Residuo eliminado permanentemente.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }
