@@ -6,7 +6,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\WasteController;
-use App\Http\Controllers\WasteTypeController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\DisposalController;
 use App\Http\Controllers\ReportController;
@@ -78,6 +77,21 @@ Route::controller(DisposalController::class)->group(function () {
     Route::post('/disposals/{disposal}/restore', 'restore')->name('disposals.restore');
     Route::delete('/disposals/{disposal}/force-delete', 'forceDelete')->name('disposals.forceDelete');
 });
+
+// Collection management routes
+Route::controller(CollectionController::class)->group(function () {
+    Route::get('/collections', 'index')->name('collections.index');
+    Route::post('/collections', 'store')->name('collections.store');
+    Route::put('/collections/{collection}', 'update')->name('collections.update');
+    Route::delete('/collections/{collection}', 'destroy')->name('collections.destroy');
+    Route::post('/collections/{collection}/restore', 'restore')->name('collections.restore');
+    Route::delete('/collections/{collection}/force-delete', 'forceDelete')->name('collections.forceDelete');
+});
+
+// Report management routes
+Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+Route::get('/reports/collections/download', [ReportController::class, 'downloadCollectionsReport'])
+    ->name('reports.collections.download');
 
 
 // Resource controllers

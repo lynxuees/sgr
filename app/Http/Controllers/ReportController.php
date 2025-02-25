@@ -2,63 +2,85 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Collection;
+use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\RedirectResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ReportController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        //
+        return view('reports.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function downloadCollectionsReport(): BinaryFileResponse
     {
-        //
-    }
+        $collections = Collection::with(['waste', 'collector', 'disposal'])->get()->map(function($collection) {
+            return [
+                'ID'              => $collection->id,
+                'Residuo'         => $collection->waste ? $collection->waste->description : 'N/A',
+                'Recolector'      => $collection->collector ? $collection->collector->name : 'N/A',
+                'Centro'          => $collection->disposal ? $collection->disposal->name : 'N/A',
+                'Cantidad'        => $collection->quantity,
+                'Unidad'          => $collection->unit,
+                'Tipo'            => $collection->type,
+                'Clasificación'   => $collection->classification,
+                'Estado'          => $collection->state,
+                'Origen'          => $collection->origin,
+                'Frecuencia'      => $collection->frequency,
+                'Horario'         => $collection->schedule,
+                'Status'          => $collection->status,
+                'Fecha'           => Carbon::parse($collection->date)->format('d/m/Y'),
+                'Localización'    => $collection->location,
+                'Creación'        => $collection->created_at->format('d/m/Y'),
+            ];
+        });
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $export = new class($collections) implements
+            FromCollection,
+            WithHeadings
+        {
+            protected $data;
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+            public function __construct($data)
+            {
+                $this->data = $data;
+            }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+            public function collection()
+            {
+                return $this->data;
+            }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+            public function headings(): array
+            {
+                return [
+                    'ID',
+                    'Residuo',
+                    'Recolector',
+                    'Centro',
+                    'Cantidad',
+                    'Unidad',
+                    'Tipo',
+                    'Clasificación',
+                    'Estado',
+                    'Origen',
+                    'Frecuencia',
+                    'Horario',
+                    'Status',
+                    'Fecha',
+                    'Localización',
+                    'Creación',
+                ];
+            }
+        };
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return Excel::download($export, 'collections_report.xlsx');
     }
 }

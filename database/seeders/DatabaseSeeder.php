@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             WasteTypesSeeder::class,
             WastesSeeder::class,
             DisposalSeeder::class,
+            CollectionSeeder::class,
         ]);
 
     }

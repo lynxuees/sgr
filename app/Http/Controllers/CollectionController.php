@@ -2,63 +2,93 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Collection;
+use App\Models\Waste;
+use App\Models\User;
+use App\Models\Disposal;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class CollectionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        //
+        // Cargamos las colecciones (incluyendo soft-deleted) junto con sus relaciones.
+        $collections = Collection::withTrashed()->with(['waste', 'collector', 'disposal'])->get();
+        // Datos para el formulario de creación/edición
+        $wastes = Waste::all();
+        $collectors = User::all();
+        $disposals = Disposal::all();
+        return view('collections.index', compact('collections', 'wastes', 'collectors', 'disposals'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'waste_id'       => 'required|exists:wastes,id',
+            'collector_id'   => 'required|exists:users,id',
+            'disposal_id'    => 'required|exists:disposals,id',
+            'quantity'       => 'required|integer|min:1',
+            'unit'           => 'required|in:T,Kg,L,m³',
+            'type'           => 'required|in:Generado,Reciclado,Eliminado',
+            'classification' => 'required|in:Ordinario,Reciclable,Peligroso',
+            'state'          => 'required|in:Sólido,Líquido,Gaseoso',
+            'origin'         => 'required|in:Industrial,Comercial,Residencial',
+            'frequency'      => 'required|in:Diario,Semanal,Mensual',
+            'schedule'       => 'required|in:Mañana,Tarde,Noche',
+            'status'         => 'required|in:Programado,En camino,Completado',
+            'date'           => 'required|date',
+            'location'       => 'required|string|min:3|max:255',
+        ]);
+
+        Collection::create($validated);
+
+        return Redirect::route('collections.index')->with('success', 'Colección creada correctamente.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function update(Request $request, Collection $collection): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'waste_id'       => 'required|exists:wastes,id',
+            'collector_id'   => 'required|exists:users,id',
+            'disposal_id'    => 'required|exists:disposals,id',
+            'quantity'       => 'required|integer|min:1',
+            'unit'           => 'required|in:T,Kg,L,m³',
+            'type'           => 'required|in:Generado,Reciclado,Eliminado',
+            'classification' => 'required|in:Ordinario,Reciclable,Peligroso',
+            'state'          => 'required|in:Sólido,Líquido,Gaseoso',
+            'origin'         => 'required|in:Industrial,Comercial,Residencial',
+            'frequency'      => 'required|in:Diario,Semanal,Mensual',
+            'schedule'       => 'required|in:Mañana,Tarde,Noche',
+            'status'         => 'required|in:Programado,En camino,Completado',
+            'date'           => 'required|date',
+            'location'       => 'required|string|min:3|max:255',
+        ]);
+
+        $collection->update($validated);
+
+        return Redirect::route('collections.index')->with('success', 'Colección actualizada correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function destroy(Collection $collection): RedirectResponse
     {
-        //
+        $collection->delete();
+        return Redirect::route('collections.index')->with('success', 'Colección deshabilitada correctamente.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function restore($collection): RedirectResponse
     {
-        //
+        $collection = Collection::withTrashed()->findOrFail($collection);
+        $collection->restore();
+        return Redirect::route('collections.index')->with('success', 'Colección restaurada correctamente.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function forceDelete($collection): RedirectResponse
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $collection = Collection::withTrashed()->findOrFail($collection);
+        $collection->forceDelete();
+        return Redirect::route('collections.index')->with('success', 'Colección eliminada permanentemente.');
     }
 }
