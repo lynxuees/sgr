@@ -29,6 +29,10 @@ export default {
                 darkDanger: "#EA5455",
                 darkSidebarHover: "#3B4B68", // Hover for sidebar items
             },
+            spacing: {
+                'px-1': '1px',
+                'px-2': '2px'
+            },
         },
     },
     plugins: [require("@tailwindcss/forms")],

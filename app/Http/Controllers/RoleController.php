@@ -2,63 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        //
+        $roles = Role::withTrashed()->get();
+        return view('roles.index', compact('roles'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:roles',
+        ]);
+
+        Role::create($validated);
+
+        return Redirect::route('roles.index')->with('success', 'Rol creado correctamente.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function update(Request $request, Role $role): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:roles,name,' . $role->id,
+        ]);
+
+        $role->update($validated);
+
+        return Redirect::route('roles.index')->with('success', 'Rol actualizado correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function destroy(Role $role): RedirectResponse
     {
-        //
+        $role->delete();
+        return Redirect::route('roles.index')->with('success', 'Rol deshabilitado correctamente.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function restore($id): RedirectResponse
     {
-        //
+        Role::withTrashed()->findOrFail($id)->restore();
+        return Redirect::route('roles.index')->with('success', 'Rol restaurado correctamente.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function forceDelete($id): RedirectResponse
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        Role::withTrashed()->findOrFail($id)->forceDelete();
+        return Redirect::route('roles.index')->with('success', 'Rol eliminado permanentemente.');
     }
 }
