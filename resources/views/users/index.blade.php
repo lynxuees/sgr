@@ -12,56 +12,56 @@
                 <i data-lucide="plus"></i> Agregar Usuario
             </button>
         </div>
-        <table id="usersTable" class="datatable w-full text-left border-collapse bg-darkSurface">
+        <table id="usersTable" class="datatable w-full text-left bg-darkSurface border-collapse">
             <thead>
             <tr>
-                <th class="p-2 border-b">ID</th>
-                <th class="p-2 border-b">Nombre</th>
-                <th class="p-2 border-b">Email</th>
-                <th class="p-2 border-b">Rol</th>
-                <th class="p-2 border-b">Fecha de Creación</th>
-                <th class="p-2 border-b">Estado</th>
-                <th class="p-2 border-b text-center">Acciones</th>
+                <th class="px-3 py-2 border-b">ID</th>
+                <th class="px-3 py-2 border-b">Nombre</th>
+                <th class="px-3 py-2 border-b">Email</th>
+                <th class="px-3 py-2 border-b">Rol</th>
+                <th class="px-3 py-2 border-b">Fecha de Creación</th>
+                <th class="px-3 py-2 border-b">Estado</th>
+                <th class="px-3 py-2 border-b text-center">Acciones</th>
             </tr>
             </thead>
             <tbody>
             @foreach ($users as $user)
-                <tr>
-                    <td class="p-2 border-b">{{ $user->id }}</td>
-                    <td class="p-2 border-b">{{ $user->name }}</td>
-                    <td class="p-2 border-b">{{ $user->email }}</td>
-                    <td class="p-2 border-b">{{ $user->role->name }}</td>
-                    <td class="p-2 border-b">{{ $user->created_at->format('d/m/Y') }}</td>
-                    <td class="p-2 border-b">
+                <tr class="border-b border-gray-700">
+                    <td class="px-3 py-2">{{ $user->id }}</td>
+                    <td class="px-3 py-2">{{ $user->name }}</td>
+                    <td class="px-3 py-2">{{ $user->email }}</td>
+                    <td class="px-3 py-2">{{ $user->role->name }}</td>
+                    <td class="px-3 py-2">{{ $user->created_at->format('d/m/Y') }}</td>
+                    <td class="px-3 py-2">
                         @if ($user->deleted_at)
                             <span class="text-darkWarning">Deshabilitado</span>
                         @else
                             <span class="text-darkSuccess">Activo</span>
                         @endif
                     </td>
-                    <td class="p-2 border-b flex justify-center gap-2">
+                    <td class="px-3 py-2 flex justify-center gap-2">
                         @if ($user->deleted_at)
                             <a href="{{ route('users.restore', $user->id) }}" class="text-darkPrimary" title="Restaurar">
-                                <i data-lucide="rotate-cw"></i>
+                                <i data-lucide="rotate-cw" class="icon-small"></i>
                             </a>
                             <form action="{{ route('users.forceDelete', $user->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-darkDanger" title="Eliminar Permanentemente">
-                                    <i data-lucide="trash-2"></i>
+                                    <i data-lucide="trash-2" class="icon-small"></i>
                                 </button>
                             </form>
                         @else
                             <button class="openEditModal text-darkPrimary" title="Editar"
                                     data-id="{{ $user->id }}" data-name="{{ $user->name }}"
                                     data-email="{{ $user->email }}" data-role="{{ $user->role_id }}">
-                                <i data-lucide="edit"></i>
+                                <i data-lucide="edit" class="icon-small"></i>
                             </button>
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-darkDanger" title="Deshabilitar">
-                                    <i data-lucide="trash"></i>
+                                    <i data-lucide="trash" class="icon-small"></i>
                                 </button>
                             </form>
                         @endif
@@ -174,4 +174,5 @@
             });
         });
     </script>
+
 @endsection

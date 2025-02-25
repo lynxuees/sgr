@@ -24,23 +24,16 @@ class UserFactory extends Factory
             'email' => $email,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'role_id' => Role::inRandomOrder()->first()->id,
+            'role_id' => Role::inRandomOrder()->first()->id ?? 1,
         ];
-    }
-
-    public function unverified(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
     }
 
     private function removeAccents(string $string): string
     {
         $unwanted = [
-            'Á'=>'A', 'É'=>'E', 'Í'=>'I', 'Ó'=>'O', 'Ú'=>'U',
-            'á'=>'a', 'é'=>'e', 'í'=>'i', 'ó'=>'o', 'ú'=>'u',
-            'Ñ'=>'N', 'ñ'=>'n'
+            'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U',
+            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+            'Ñ' => 'N', 'ñ' => 'n'
         ];
 
         return strtr($string, $unwanted);
