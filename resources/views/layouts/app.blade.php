@@ -29,8 +29,18 @@
             </li>
             <li class="px-6 py-3 hover:bg-darkSidebarHover transition-colors duration-200 rounded-md mx-2 flex items-center space-x-3">
                 <i data-lucide="recycle"></i>
-                <a href="{{ route('wastes.index') }}" class="block font-medium">Residuos</a>
+                <a href="{{ route('waste_types.index') }}" class="block font-medium">Tipos de Residuos</a>
             </li>
+            <li class="px-6 py-3 hover:bg-darkSidebarHover transition-colors duration-200 rounded-md mx-2 flex items-center space-x-3">
+                <i data-lucide="trash-2"></i>
+                <a href="{{ route('wastes.index') }}" class="block font-medium">Gestión de Residuos</a>
+            </li>
+
+            <li class="px-6 py-3 hover:bg-darkSidebarHover transition-colors duration-200 rounded-md mx-2 flex items-center space-x-3">
+                <i data-lucide="landmark"></i>
+                <a href="{{ route('disposals.index') }}" class="block font-medium">Centros de Reciclaje</a>
+            </li>
+
             <li class="px-6 py-3 hover:bg-darkSidebarHover transition-colors duration-200 rounded-md mx-2 flex items-center space-x-3">
                 <i data-lucide="truck"></i>
                 <a href="{{ route('collections.index') }}" class="block font-medium">Recolecciones</a>
