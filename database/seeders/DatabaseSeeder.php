@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             WasteTypesSeeder::class,
             WastesSeeder::class,
+            DisposalSeeder::class,
         ]);
 
     }

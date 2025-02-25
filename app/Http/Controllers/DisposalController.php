@@ -2,63 +2,71 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Disposal;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class DisposalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        //
+        $disposals = Disposal::withTrashed()->get();
+        return view('disposals.index', compact('disposals'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'name'     => 'required|string|max:255',
+            'phone'    => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255',
+            'contact'  => 'required|string|max:255',
+            'city'     => 'required|string|max:255',
+            'address'  => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+        ]);
+
+        Disposal::create($validated);
+
+        return Redirect::route('disposals.index')->with('success', 'Centro de disposición creado correctamente.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function update(Request $request, Disposal $disposal): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'name'     => 'required|string|max:255',
+            'phone'    => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255',
+            'contact'  => 'required|string|max:255',
+            'city'     => 'required|string|max:255',
+            'address'  => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+        ]);
+
+        $disposal->update($validated);
+
+        return Redirect::route('disposals.index')->with('success', 'Centro de disposición actualizado correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function destroy(Disposal $disposal): RedirectResponse
     {
-        //
+        $disposal->delete();
+        return Redirect::route('disposals.index')->with('success', 'Centro de disposición deshabilitado correctamente.');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function restore($disposal): RedirectResponse
     {
-        //
+        $disposal = Disposal::withTrashed()->findOrFail($disposal);
+        $disposal->restore();
+        return Redirect::route('disposals.index')->with('success', 'Centro de disposición restaurado correctamente.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function forceDelete($disposal): RedirectResponse
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $disposal = Disposal::withTrashed()->findOrFail($disposal);
+        $disposal->forceDelete();
+        return Redirect::route('disposals.index')->with('success', 'Centro de disposición eliminado permanentemente.');
     }
 }
