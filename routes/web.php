@@ -36,6 +36,17 @@ Route::controller(UserController::class)->group(function () {
     Route::delete('/users/force-delete/{id}', 'forceDelete')->name('users.forceDelete');
 });
 
+// Role management routes
+Route::controller(RoleController::class)->group(function () {
+    Route::get('/roles', 'index')->name('roles.index');
+    Route::post('/roles', 'store')->name('roles.store');
+    Route::put('/roles/{role}', 'update')->name('roles.update');
+    Route::delete('/roles/{role}', 'destroy')->name('roles.destroy');
+    Route::post('roles/{id}/restore', [RoleController::class, 'restore'])->name('roles.restore');
+    Route::delete('roles/{id}/force-delete', [RoleController::class, 'forceDelete'])->name('roles.forceDelete');
+});
+
+
 // Resource controllers
 Route::resources([
     'roles' => RoleController::class,
