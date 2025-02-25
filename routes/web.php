@@ -69,6 +69,15 @@ Route::controller(WasteController::class)->group(function () {
 });
 
 
+// Disposal management routes
+Route::controller(DisposalController::class)->group(function () {
+    Route::get('/disposals', 'index')->name('disposals.index');
+    Route::post('/disposals', 'store')->name('disposals.store');
+    Route::put('/disposals/{disposal}', 'update')->name('disposals.update');
+    Route::delete('/disposals/{disposal}', 'destroy')->name('disposals.destroy');
+    Route::post('/disposals/{disposal}/restore', 'restore')->name('disposals.restore');
+    Route::delete('/disposals/{disposal}/force-delete', 'forceDelete')->name('disposals.forceDelete');
+});
 
 
 // Resource controllers

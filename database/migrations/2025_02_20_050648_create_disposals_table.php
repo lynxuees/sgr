@@ -14,10 +14,15 @@ return new class extends Migration
         Schema::create('disposals', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 255);
+            $table->string('phone', 255);
+            $table->string('email', 255);
+            $table->string('contact', 255);
+            $table->string('city', 255);
             $table->string('address', 255);
             $table->integer('capacity');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->softDeletes();
         });
     }
 
