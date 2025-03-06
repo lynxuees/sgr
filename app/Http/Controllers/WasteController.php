@@ -14,7 +14,7 @@ class WasteController extends Controller
 {
     public function index(): View
     {
-        $wastes = Waste::withTrashed()->with(['user', 'type'])->get();
+        $wastes = Waste::withTrashed()->with(['user', 'wasteType'])->get();
         $users = User::all();
         $wasteTypes = WasteType::all();
         return view('wastes.index', compact('wastes', 'users', 'wasteTypes'));

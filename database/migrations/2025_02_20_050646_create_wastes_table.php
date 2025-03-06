@@ -17,6 +17,11 @@ return new class extends Migration
             $table->foreignId('type_id')->constrained('waste_types')->onDelete('cascade');
             $table->text('description');
             $table->integer('quantity');
+            $table->enum('unit', ['T', 'Kg', 'L', 'm³']);
+            $table->enum('classification', ['Ordinario', 'Reciclable', 'Peligroso']);
+            $table->enum('state', ['Solido', 'Liquido', 'Gaseoso']);
+            $table->enum('origin', ['Industrial', 'Comercial', 'Residencial']);
+            $table->enum('type', ['Generado', 'Reciclado', 'Eliminado']);
             $table->enum('status', ['Pendiente', 'Recolectado', 'Procesado', 'Eliminado']);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
