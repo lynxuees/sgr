@@ -14,7 +14,7 @@ class WasteType extends Model
 
     public function wastes()
     {
-        return $this->hasMany(Waste::class);
+        return $this->hasMany(Waste::class, 'type_id');
     }
 }
 
