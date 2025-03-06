@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Admin SGR',
                 'email' => 'admin@sgr.test',
                 'email_verified_at' => now(),
-                'password' => Hash::make('adminsgr'),
+                'password' => Hash::make('password'),
                 'role_id' => 1,
             ]);
         }

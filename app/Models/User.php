@@ -23,7 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role_id', // Added role_id to allow role assignment
+        'role_id',
     ];
 
     /**
@@ -55,6 +55,14 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Check if the user has a specific role or multiple roles.
+     */
+    public function hasRole($roles): bool
+    {
+        return in_array($this->role->name, (array) $roles);
     }
 
     /**

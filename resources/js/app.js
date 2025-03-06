@@ -5,6 +5,8 @@ import 'datatables.net-dt';
 import { createIcons, icons } from 'lucide';
 
 window.$ = window.jQuery = $;
+window.createIcons = createIcons;
+window.icons = icons;
 
 if (typeof $ !== 'undefined') {
     console.log("jQuery está funcionando correctamente.");
@@ -14,6 +16,7 @@ if (typeof $ !== 'undefined') {
 
 $(document).ready(function () {
     createIcons({ icons });
+
     $("#usersTable").DataTable({
         language: {
             processing: "Procesando...",

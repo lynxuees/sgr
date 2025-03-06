@@ -81,6 +81,8 @@ class ReportController extends Controller
             }
         };
 
-        return Excel::download($export, 'collections_report.xlsx');
+        $filename = 'collections_report_' . Carbon::now()->format('Y-m-d_H-i-s') . '.xlsx';
+
+        return Excel::download($export, $filename);
     }
 }

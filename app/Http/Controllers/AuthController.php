@@ -4,14 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\Role;
 
 class AuthController extends Controller
 {
     /**
-     * Display the login form.
+     * Show the login form.
      */
     public function showLoginForm()
     {
+        if (auth()->check()) {
+            return redirect()->route('dashboard');
+        }
+
         return view('auth.login');
     }
 
@@ -25,24 +32,31 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
-            return redirect()->intended('/dashboard'); // Redirect to dashboard on successful login
+        $remember = $request->has('remember');
+
+        if (Auth::attempt($request->only('email', 'password'), $remember)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/dashboard')->with('success', 'Bienvenido al sistema.');
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials']);
+        return back()->withErrors(['email' => 'Credenciales no válidas.'])->withInput();
     }
 
     /**
      * Log the user out.
      */
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
-        return redirect('/login'); // Redirect to login after logout
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login')->with('success', 'Has cerrado sesión correctamente.');
     }
 
     /**
-     * Display the registration form.
+     * Show the registration form.
      */
     public function showRegisterForm()
     {
@@ -60,13 +74,18 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed'
         ]);
 
-        $user = \App\Models\User::create([
+        $role = Role::where('name', 'customer')->first();
+
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => Hash::make($request->password),
+            'role_id' => $role->id ?? 6,
         ]);
 
         Auth::login($user);
-        return redirect('/dashboard'); // Redirect after successful registration
+        $request->session()->regenerate();
+
+        return redirect('/dashboard')->with('success', 'Registro exitoso. Bienvenido.');
     }
 }
