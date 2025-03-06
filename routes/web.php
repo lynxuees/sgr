@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WasteTypesController;
 use App\Http\Middleware\PreventBackHistory;
 use Illuminate\Support\Facades\Route;
@@ -26,8 +27,9 @@ Route::controller(AuthController::class)->group(function () {
 
 // Protected routes (requires authentication)
 Route::middleware(['auth', PreventBackHistory::class])->group(function () {
-    // Dashboard
-    Route::get('/dashboard', fn() => view('dashboard.index'))->name('dashboard');
+
+    // Dashboard route
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // User management routes
     Route::controller(UserController::class)->group(function () {

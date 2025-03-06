@@ -29,7 +29,7 @@
                 <tr class="border-b border-gray-700">
                     <td class="px-3 py-2">{{ $waste->id }}</td>
                     <td class="px-3 py-2">{{ $waste->user->name }}</td>
-                    <td class="px-3 py-2">{{ $waste->type->name }}</td>
+                    <td class="px-3 py-2">{{ $waste->wasteType->name }}</td> <!-- Cambio aquí -->
                     <td class="px-3 py-2">{{ $waste->description }}</td>
                     <td class="px-3 py-2">{{ $waste->quantity }}</td>
                     <td class="px-3 py-2">
@@ -39,7 +39,6 @@
                             <span class="text-darkSuccess">{{ $waste->status }}</span>
                         @endif
                     </td>
-
                     <td class="px-3 py-2">{{ $waste->created_at->format('d/m/Y') }}</td>
                     <td class="px-3 py-2 flex justify-center gap-2">
                         @if ($waste->deleted_at)

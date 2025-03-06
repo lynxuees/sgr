@@ -3,16 +3,16 @@ import $ from 'jquery';
 import 'jquery-validation';
 import 'datatables.net-dt';
 import { createIcons, icons } from 'lucide';
+import Chart from 'chart.js/auto';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 window.$ = window.jQuery = $;
+window.Chart = Chart;
 window.createIcons = createIcons;
 window.icons = icons;
+window.ChartDataLabels = ChartDataLabels;
 
-if (typeof $ !== 'undefined') {
-    console.log("jQuery está funcionando correctamente.");
-} else {
-    console.error("Algo falló: jQuery no está definido.");
-}
+Chart.register(ChartDataLabels);
 
 $(document).ready(function () {
     createIcons({ icons });

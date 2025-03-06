@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('title', 'Gestión de Colecciones')
-@section('page-title', 'Administración de Colecciones')
+@section('page-title', 'Administración de Recolecciones')
 
 @section('content')
     <div class="bg-darkBackground p-6 shadow rounded-lg">
-        <h2 class="text-2xl font-semibold text-darkText">Lista de Colecciones</h2>
+        <h2 class="text-2xl font-semibold text-darkText">Lista de Recolecciones</h2>
         <div class="mt-4 flex justify-end">
             <button id="openCreateModal" data-url="{{ route('collections.store') }}" class="bg-darkPrimary text-white px-4 py-2 rounded-md flex items-center gap-2">
-                <i data-lucide="plus" class="icon-small"></i> Agregar Colección
+                <i data-lucide="plus" class="icon-small"></i> Agregar Recolección
             </button>
         </div>
         <div class="overflow-x-auto">
@@ -243,7 +243,7 @@
 
                 $("#openCreateModal").on("click", function () {
                     let url = $(this).data("url");
-                    openModal("Crear Colección", url, "POST", {});
+                    openModal("Crear Recolección", url, "POST", {});
                 });
 
                 $(document).on("click", ".openEditModal", function () {
@@ -261,10 +261,10 @@
                         schedule: $(this).data("schedule"),
                         status: $(this).data("status"),
                         date: $(this).data("date"),
-                        location: $(this).data("location")
+                        location: $(this).data("location"),
                     };
                     let url = $(this).data("url");
-                    openModal("Editar Colección", url, "PUT", data);
+                    openModal("Editar Recolección", url, "PUT", data);
                 });
 
                 function openModal(title, action, method, data) {
@@ -335,5 +335,7 @@
                     }
                 });
             });
+
+
         </script>
 @endsection
